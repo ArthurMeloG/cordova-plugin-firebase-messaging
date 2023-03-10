@@ -4,7 +4,8 @@
 @import UserNotifications;
 
 @interface FirebaseMessagingPlugin : CDVPlugin
-- (void)requestPermission:(CDVInvokedUrlCommand*)command;
+- (void)grantPermission:(CDVInvokedUrlCommand*)command;
+- (void)hasPermission:(CDVInvokedUrlCommand*)command;
 - (void)clearNotifications:(CDVInvokedUrlCommand*)command;
 - (void)deleteToken:(CDVInvokedUrlCommand*)command;
 - (void)getToken:(CDVInvokedUrlCommand*)command;
@@ -24,5 +25,6 @@
 @property (nonatomic, copy) NSString* tokenRefreshCallbackId;
 @property (nonatomic, retain) NSDictionary* lastNotification;
 @property (nonatomic, readwrite) UNNotificationPresentationOptions forceShow;
+@property(nonatomic, readwrite) NSMutableDictionary *traces;
 
 @end

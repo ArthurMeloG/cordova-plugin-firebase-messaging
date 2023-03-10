@@ -145,7 +145,7 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
     }
 
     @CordovaMethod
-    private void requestPermission(CordovaArgs args, CallbackContext callbackContext) throws JSONException {
+    private void grantPermission(CordovaArgs args, CallbackContext callbackContext) throws JSONException {
         JSONObject options = args.getJSONObject(0);
         Context context = cordova.getActivity().getApplicationContext();
         forceShow = options.optBoolean("forceShow");
@@ -161,6 +161,26 @@ public class FirebaseMessagingPlugin extends ReflectiveCordovaPlugin {
                 callbackContext.error("Notifications permission is not granted");
             }
         }
+    }
+
+    @CordovaMethod
+    private void hasPermission(final CallbackContext callbackContext) {
+        Log.d(TAG, "hasPermission called");
+        cordova.getThreadPool().execute(new Runnable() {
+        public void run() {
+            try {
+            Context context = cordova.getActivity();
+            NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
+            boolean areNotificationsEnabled = notificationManagerCompat.areNotificationsEnabled();
+            JSONObject object = new JSONObject();
+            object.put("isEnabled", areNotificationsEnabled);
+            callbackContext.success(object);
+            Log.d(TAG, "hasPermission success. areEnabled: " + (areNotificationsEnabled ? "true" : "false"));
+            } catch (Exception e) {
+            Log.d(TAG, "Does not hasPermission. areEnabled: " + (areNotificationsEnabled ? "true" : "false"));
+            }
+        }
+        });
     }
 
     @Override
